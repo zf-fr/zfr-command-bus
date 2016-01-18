@@ -21,7 +21,7 @@ class SimpleCommandBusFactory
         $config = $container->get('config');
 
         if (!isset($config['zfr_command_bus']['command_handlers'])) {
-           throw new OutOfBoundsException('Missing config key [\'zfr_command_bus\'][\'command_handlers\']');
+            throw new OutOfBoundsException('Missing config key [\'zfr_command_bus\'][\'command_handlers\']');
         }
 
         return new SimpleCommandBus($container, $config['zfr_command_bus']['command_handlers']);

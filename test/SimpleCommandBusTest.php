@@ -49,15 +49,18 @@ class SimpleCommandBusTest extends \PHPUnit_Framework_TestCase
 
     private function createTraceableCommandHandler()
     {
+        // @codingStandardsIgnoreStart
         return new class {
             public $isCalled = false;
 
             public $command;
 
-            public function __invoke(\stdClass $command) {
+            public function __invoke(\stdClass $command)
+            {
                 $this->isCalled = true;
                 $this->command  = $command;
             }
         };
+        // @codingStandardsIgnoreEnd
     }
 }
