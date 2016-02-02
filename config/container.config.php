@@ -5,10 +5,11 @@ use ZfrCommandBus\Container\SimpleCommandBusFactory;
 use ZfrCommandBus\SimpleCommandBus;
 
 return [
-    'container' => [
+    'dependencies' => [
         'aliases' => [
             CommandBusInterface::class => SimpleCommandBus::class,
         ],
+        
         'factories' => [
             SimpleCommandBus::class => SimpleCommandBusFactory::class,
         ],
