@@ -10,6 +10,6 @@ class ModuleConfigTest extends \PHPUnit_Framework_TestCase
     {
         $moduleConfig = new ModuleConfig();
 
-        $this->assertArrayHasKey('container', $moduleConfig());
+        $this->assertArrayHasKey('dependencies', $moduleConfig());
     }
 }
