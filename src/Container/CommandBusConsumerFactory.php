@@ -13,7 +13,7 @@ class CommandBusConsumerFactory
     /**
      * @param ContainerInterface $container
      * @param string             $requestedName
-     * 
+     *
      * @return object
      */
     public function __invoke(ContainerInterface $container, string $requestedName)
