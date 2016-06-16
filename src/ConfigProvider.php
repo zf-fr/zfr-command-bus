@@ -2,7 +2,7 @@
 
 namespace ZfrCommandBus;
 
-class ModuleConfig
+class ConfigProvider
 {
     /**
      * @return array
