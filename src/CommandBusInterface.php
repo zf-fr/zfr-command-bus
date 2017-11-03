@@ -2,7 +2,7 @@
 
 namespace ZfrCommandBus;
 
-interface CommandBusInterface
+interface CommandBusInterface extends MessageBusInterface
 {
     /**
      * @param object $command
