@@ -4,8 +4,9 @@ namespace ZfrCommandBusTest;
 
 use Interop\Container\ContainerInterface;
 use ZfrCommandBus\Exception\InvalidArgumentException;
-use ZfrCommandBus\Exception\RuntimeException;
 use ZfrCommandBus\SimpleCommandBus;
+use ZfrCommandBusTest\Asset\TestCommand;
+use ZfrCommandBusTest\Asset\TestCommandHandler;
 
 class SimpleCommandBusTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,17 +19,6 @@ class SimpleCommandBusTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(InvalidArgumentException::class);
 
         $commandBus->dispatch('string');
-    }
-
-    public function testThrowsExceptionIfCommandHandlerIsNotRegistered()
-    {
-        $container  = $this->prophesize(ContainerInterface::class);
-        $commandMap = [];
-        $commandBus = new SimpleCommandBus($container->reveal(), $commandMap);
-
-        $this->setExpectedException(RuntimeException::class);
-
-        $commandBus->dispatch(new \stdClass());
     }
 
     public function testDispatchesCommandToMappedCommandHandler()
@@ -47,6 +37,21 @@ class SimpleCommandBusTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($command, $commandHandler->command);
     }
 
+    public function testTriesToGuessCommandHandlerNameWithSuffix()
+    {
+        $container      = $this->prophesize(ContainerInterface::class);
+        $commandBus     = new SimpleCommandBus($container->reveal());
+        $command        = new TestCommand();
+        $commandHandler = $this->createTraceableCommandHandler();
+
+        $container->get(TestCommandHandler::class)->shouldBeCalled()->willReturn($commandHandler);
+
+        $commandBus->dispatch($command);
+
+        $this->assertTrue($commandHandler->isCalled);
+        $this->assertSame($command, $commandHandler->command);
+    }
+
     private function createTraceableCommandHandler()
     {
         // @codingStandardsIgnoreStart
@@ -55,7 +60,7 @@ class SimpleCommandBusTest extends \PHPUnit_Framework_TestCase
 
             public $command;
 
-            public function __invoke(\stdClass $command)
+            public function __invoke($command)
             {
                 $this->isCalled = true;
                 $this->command  = $command;

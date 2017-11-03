@@ -22,7 +22,7 @@ class SimpleCommandBus implements CommandBusInterface
      * @param ContainerInterface $container
      * @param array              $commandMap
      */
-    public function __construct(ContainerInterface $container, array $commandMap)
+    public function __construct(ContainerInterface $container, array $commandMap = [])
     {
         $this->container  = $container;
         $this->commandMap = $commandMap;
@@ -42,17 +42,9 @@ class SimpleCommandBus implements CommandBusInterface
             ));
         }
 
-        $commandClass = get_class($command);
-
-        if (!isset($this->commandMap[$commandClass])) {
-            throw new RuntimeException(sprintf(
-                'No command handler was registered for "%s"',
-                $commandClass
-            ));
-        }
-
-        /** @var callable $commandHandler */
-        $commandHandler = $this->container->get($this->commandMap[$commandClass]);
+        $commandClass       = get_class($command);
+        $commandHandlerName = $this->commandMap[$commandClass] ?? "{$commandClass}Handler";
+        $commandHandler     = $this->container->get($commandHandlerName);
 
         assert(is_callable($commandHandler), 'Make sure your command handler is callable');
 
